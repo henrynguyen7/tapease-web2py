@@ -69,7 +69,7 @@ echo "**************"
 echo "\n"
 
 cd /opt/web-apps/web2py/applications/
-sudo git clone https://github.com/henrynguyen7/tapease.git tapease
+sudo git clone https://github.com/henrynguyen7/tapease-web2py.git tapease
 sudo cp /opt/web-apps/web2py/applications/tapease/routes.py /opt/web-apps/web2py/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/cron/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/databases/
