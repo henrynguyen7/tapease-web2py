@@ -47,13 +47,6 @@ cd ~/
 wget http://web2py.googlecode.com/hg/scripts/setup-web2py-fedora.sh
 chmod 764 setup-web2py-fedora.sh
 sudo ./setup-web2py-fedora.sh
-cat > /opt/web-apps/web2py/routes.py <<EOF
-routers = dict(
-    BASE = dict(
-        default_application='tapease',
-    )
-)
-EOF
 sudo chown -R apache:ec2-user /opt/web-apps/web2py
 sudo rm ~/web2py_src.zip
 
@@ -77,6 +70,7 @@ echo "\n"
 
 cd /opt/web-apps/web2py/applications/
 sudo git clone https://github.com/henrynguyen7/tapease.git tapease
+sudo cp /opt/web-apps/web2py/applications/tapease/routes.py /opt/web-apps/web2py/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/cron/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/databases/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/errors/
@@ -86,7 +80,7 @@ sudo mkdir /opt/web-apps/web2py/applications/tapease/sessions/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/static/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/uploads/
 sudo mkdir /opt/web-apps/web2py/applications/tapease/private/
-cat > /opt/web-apps/web2py/applications/tapease/private/resources.json <<EOF
+cat > /opt/web-apps/web2py/applications/tapease/private/conf.json <<EOF
 {
     "mysql": {
         "username": "web2py-tapease",
