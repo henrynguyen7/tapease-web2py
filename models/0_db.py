@@ -67,7 +67,7 @@ auth.define_tables()
 db.define_table(
     'tap',
     Field('user_id', 'reference auth_user', required=True, notnull=True),
-    Field('org_id', 'reference org', required=True, notnull=True),
+    Field('org_id', 'reference org'),
     Field('page_token', 'string'),
     Field('page_uid', 'string', required=True, notnull=True),
     Field('element_route', 'string', required=True, notnull=True),
