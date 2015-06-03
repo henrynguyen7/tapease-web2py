@@ -56,7 +56,7 @@ db.define_table(
 )
 
 auth.settings.extra_fields['auth_user'] = [
-    Field('org_id', 'reference org', required=True, notnull=True),
+    Field('org_id', 'reference org'),
     Field('image_url', 'string'),
     Field('is_enabled', 'boolean', default=True),
     Field('is_admin', 'boolean', default=False),
