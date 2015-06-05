@@ -98,7 +98,7 @@ def tap():
             org_ids = [org.get('org_id') for org in db(db.user_to_org.user_id == auth.user.id).select(db.user_to_org.org_id).as_list()]
             query = db.tap.org_id.belongs(org_ids)
         if vars.get('user_id'):
-            query = query.__and__(db.tap.page_uid == vars.get('user_id'))
+            query = query.__and__(db.tap.user_id == vars.get('user_id'))
         if vars.get('page_uid'):
             query = query.__and__(db.tap.page_uid == vars.get('page_uid'))
         if vars.get('page_token'):
