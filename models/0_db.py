@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import json
-import os
-
 from gluon.tools import Auth
 
 
 """ DB """
-
 db = DAL('sqlite://tapease.db', migrate=True)
 
 
 """ DB Definitions """
-
-auth = Auth(db)
 
 ########################################################################
 # Reference: valid web2py field types
@@ -49,29 +43,45 @@ auth = Auth(db)
 #       uploadfolder=os.path.join(request.folder,'uploads'),
 #       uploadseparate=None,uploadfs=None)
 
+auth = Auth(db)
+
+auth.settings.extra_fields['auth_user'] = [
+    Field('name', 'string'),
+    Field('image_url', 'string'),
+    Field('is_enabled', 'boolean', default=True),
+]
+
+auth.define_tables()
+
+db.auth_user.first_name.readable = db.auth_user.first_name.writable = False
+db.auth_user.last_name.readable = db.auth_user.last_name.writable = False
+db.auth_user.registration_id.readable = db.auth_user.registration_id.writable = False
+db.auth_user.registration_key.readable = db.auth_user.registration_key.writable = False
+db.auth_user.reset_password_key.readable = db.auth_user.reset_password_key.writable = False
+
 db.define_table(
     'org',
     Field('name', 'string', required=True, notnull=True, unique=True),
     Field('created_on', 'datetime', default=request.now),
 )
 
-auth.settings.extra_fields['auth_user'] = [
+db.define_table(
+    'user_to_org',
+    Field('user_id', 'reference auth_user'),
     Field('org_id', 'reference org'),
-    Field('image_url', 'string'),
-    Field('is_enabled', 'boolean', default=True),
-    Field('is_admin', 'boolean', default=False),
-]
-
-auth.define_tables()
+)
 
 db.define_table(
     'tap',
     Field('user_id', 'reference auth_user', required=True, notnull=True),
-    Field('org_id', 'reference org'),
+    Field('org_id', 'reference org', required=True, notnull=True),
+    Field('page_uid', 'string'),
     Field('page_token', 'string'),
-    Field('page_uid', 'string', required=True, notnull=True),
     Field('element_route', 'string', required=True, notnull=True),
-    Field('node', 'string', required=True, notnull=True),
+    Field('element_node', 'string', required=True, notnull=True),
     Field('comment', 'string', required=True, notnull=True),
     Field('created_on', 'datetime', default=request.now),
 )
+
+AUTH_ROLE_ADMINS = auth.add_group(role='admins')
+AUTH_ROLE_USERS = auth.add_group(role='users')
