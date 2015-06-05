@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
 
 from gluon.tools import Auth
 
 
-""" DB """
 db = DAL('sqlite://tapease.db', migrate=True)
 
-
-""" DB Definitions """
 
 ########################################################################
 # Reference: valid web2py field types
@@ -62,6 +58,8 @@ db.auth_user.reset_password_key.readable = db.auth_user.reset_password_key.writa
 db.define_table(
     'org',
     Field('name', 'string', required=True, notnull=True, unique=True),
+    Field('url', 'string'),
+    Field('image_url', 'string'),
     Field('created_on', 'datetime', default=request.now),
 )
 
@@ -82,6 +80,3 @@ db.define_table(
     Field('comment', 'string', required=True, notnull=True),
     Field('created_on', 'datetime', default=request.now),
 )
-
-AUTH_ROLE_ADMINS = auth.add_group(role='admins')
-AUTH_ROLE_USERS = auth.add_group(role='users')

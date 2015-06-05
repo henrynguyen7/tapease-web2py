@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from gluon.tools import Crud, Service, PluginManager
 from gluon.custom_import import track_changes
 
@@ -24,6 +26,5 @@ auth.settings.create_user_groups = False
 
 
 """ LOGGING """
-import logging
 logger = logging.getLogger(request.application)
 logger.setLevel(logging.DEBUG)
