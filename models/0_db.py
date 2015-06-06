@@ -64,7 +64,7 @@ db.define_table(
 )
 
 db.define_table(
-    'user_to_org',
+    'membership',
     Field('user_id', 'reference auth_user'),
     Field('org_id', 'reference org'),
 )
