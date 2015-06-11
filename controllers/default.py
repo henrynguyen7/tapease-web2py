@@ -4,10 +4,11 @@ response.headers['Content-Type'] = 'application/json'
 
 
 @request.restful()
-def user():
+def users():
 
     def GET(*args, **vars):
         user = auth.login_bare(vars.get('email'), vars.get('password'))
+        print user
         if user:
             orgs_result = db(
                 (db.membership.user_id == user.id) &
@@ -27,10 +28,12 @@ def user():
 
     def POST(*args, **vars):
         result = db.auth_user.validate_and_insert(**vars)
+        print result
         if result.errors:
             return result.as_dict()
         else:
             user = auth.login_bare(vars.get('email'), vars.get('password'))
+            print user
             return dict(
                 id=user.id,
                 name=user.name,
@@ -53,7 +56,7 @@ def user():
 
 
 @request.restful()
-def org():
+def orgs():
 
     @auth.requires_login()
     def GET(*args, **vars):
@@ -65,7 +68,7 @@ def org():
     def POST(*args, **vars):
         result = db.org.validate_and_insert(**vars)
         if not result.errors:
-            db.membership.validate_and_insert(user_id=auth.user.id, org_id=result.id)
+            db.membership.validate_and_insert(user_id=auth.user.id, org_id=result.id, is_admin=True)
         return result.as_dict()
 
     @auth.requires_login()
@@ -82,11 +85,11 @@ def org():
 
 
 @request.restful()
-def membership():
+def memberships():
 
     @auth.requires_login()
     def GET(*args, **vars):
-        org_ids = db(db.membership.user_id == auth.user.id).select(db.membership.org_id).as_list()
+        org_ids = [oid.get('org_id') for oid in db(db.membership.user_id == auth.user.id).select(db.membership.org_id).as_list()]
         orgs = db(db.org.id.belongs(org_ids)).select()
         return dict(orgs=orgs)
 
@@ -117,7 +120,7 @@ def membership():
 
 
 @request.restful()
-def tap():
+def taps():
 
     @auth.requires_login()
     def GET(*args, **vars):

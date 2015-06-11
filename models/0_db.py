@@ -67,6 +67,7 @@ db.define_table(
     'membership',
     Field('user_id', 'reference auth_user'),
     Field('org_id', 'reference org'),
+    Field('is_admin', 'boolean'),
 )
 
 db.define_table(
