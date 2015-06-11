@@ -1,8 +1,22 @@
+import os
+import json
 
 from gluon.tools import Auth
 
 
-db = DAL('sqlite://tapease.db', migrate=True)
+conffile = os.path.join(request.folder, "private", "conf.json")
+with open(conffile) as conf:
+    configs = json.load(conf)
+
+mysql_username, mysql_password, mysql_database, mysql_host, mysql_port = (
+    configs.get("mysql").get('username'),
+    configs.get("mysql").get('password'),
+    configs.get("mysql").get('database'),
+    configs.get("mysql").get('host'),
+    configs.get("mysql").get('port'),
+)
+
+db = DAL('mysql://' + mysql_username + ':' + mysql_password + '@' + mysql_host + ':' + mysql_port + '/' + mysql_database, pool_size=3, check_reserved=['mysql'], migrate=True)
 
 
 ########################################################################
@@ -57,7 +71,7 @@ db.auth_user.reset_password_key.readable = db.auth_user.reset_password_key.writa
 
 db.define_table(
     'org',
-    Field('name', 'string', required=True, notnull=True, unique=True),
+    Field('name', 'string', required=True, notnull=True, unique=True, length=255),
     Field('url', 'string'),
     Field('image_url', 'string'),
     Field('created_on', 'datetime', default=request.now),
